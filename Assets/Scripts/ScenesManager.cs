@@ -8,6 +8,8 @@ public class ScenesManager : MonoBehaviour
     public GameObject player = null;
     public GameObject LevelFinished = null;
     public GameObject pressAnyKey = null;
+    public GameObject gameOver = null;
+
     BallController ballController;
 
     private bool gamePause;
@@ -25,6 +27,7 @@ public class ScenesManager : MonoBehaviour
     {
         PauseMenu();
         CheckObstacles();
+        CheckLives();
     }
 
     public void PlayGame()
@@ -36,6 +39,16 @@ public class ScenesManager : MonoBehaviour
     {
         SceneManager.LoadScene("Level 2");
         gamePause = true;
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void QuitGame()
@@ -59,16 +72,31 @@ public class ScenesManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !gamePause)
         {
-            gamePause = true;
-            pressAnyKey.SetActive(true);
-            Time.timeScale = 0;
+            if(pressAnyKey != null)
+            {
+                gamePause = true;
+                pressAnyKey.SetActive(true);
+                Time.timeScale = 0;
+            }
         }
 
-        if (gamePause == true && Input.GetKeyDown(KeyCode.Mouse0))
+        if (gamePause == true && Input.GetKeyDown(KeyCode.Space))
         {
             Time.timeScale = 1;
             pressAnyKey.SetActive(false);
             gamePause = false;
+        }
+    }
+
+    public void CheckLives()
+    {
+        if(ballController != null)
+        {
+            if(ballController.Lives <= 0 && gameOver != null)
+            {
+                Time.timeScale = 0;
+                gameOver.SetActive(true);
+            }
         }
     }
 }

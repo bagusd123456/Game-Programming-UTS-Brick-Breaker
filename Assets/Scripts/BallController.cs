@@ -13,6 +13,7 @@ public class BallController : MonoBehaviour
     [HideInInspector] public GameObject[] obstacleList;
 
     public Text scoreText;
+    public Text livesText;
     public GameObject player;
 
     private void Awake()
@@ -22,9 +23,9 @@ public class BallController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         rb.AddForce(Vector3.down * 250f);
         Score = 0;
+        Lives = 3;
     }
 
     // Update is called once per frame
@@ -34,6 +35,7 @@ public class BallController : MonoBehaviour
         //CheckObstacles();
         lastVelocity = rb.velocity;
         scoreText.text ="Score: " + Score.ToString();
+        livesText.text = "Lives: " + Lives.ToString();
 
         if (Input.GetKeyDown(KeyCode.Space) && isStick)
         {
@@ -58,6 +60,7 @@ public class BallController : MonoBehaviour
 
         else if (collision.gameObject.CompareTag("BottomLine"))
         {
+            Lives--;
             ResetBall();
             gameObject.transform.parent = player.transform;
         }
