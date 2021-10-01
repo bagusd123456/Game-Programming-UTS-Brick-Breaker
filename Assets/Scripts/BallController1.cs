@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BallController : MonoBehaviour
+public class BallController1 : MonoBehaviour
 {
     private Rigidbody rb;
     Vector3 lastVelocity;
     private int Score;
-    public int Lives = 3;
+    [HideInInspector] public int Lives;
     private bool isStick;
     [HideInInspector] public GameObject[] obstacleList;
 
@@ -19,34 +19,28 @@ public class BallController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        
     }
     // Start is called before the first frame update
     void Start()
     {
         rb.AddForce(Vector3.down * 250f);
         Score = 0;
-        //Lives = 3;
-    }
-    private void OnDisable()
-    {
-        //PlayerPrefs.SetInt("Nyowo", 3);
+        Lives = 3;
     }
 
-    private void OnEnable()
+    void OnDisable()
     {
-        //Lives = PlayerPrefs.GetInt("Nyowo");
+        PlayerPrefs.SetInt("nyawa", Lives);
     }
 
+    void OnEnable()
+    {
+        Lives = PlayerPrefs.GetInt("nyowo");
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (Lives <= 0)
-        {
-            PlayerPrefs.SetFloat("Nyowo", 3);
-        }
-        
         obstacleList = GameObject.FindGameObjectsWithTag("Box");
         //CheckObstacles();
         lastVelocity = rb.velocity;
@@ -77,7 +71,6 @@ public class BallController : MonoBehaviour
         else if (collision.gameObject.CompareTag("BottomLine"))
         {
             Lives--;
-            PlayerPrefs.SetInt("Nyowo", Lives);
             ResetBall();
             gameObject.transform.parent = player.transform;
         }
